@@ -1,3 +1,5 @@
+import { assetPath } from "@/lib/utils";
+
 export interface DeviceSpec {
   slug: string;
   name: string;
@@ -16,7 +18,7 @@ export interface DeviceSpec {
  * `public/images/telstra/devices/` via `scripts/download-telstra-images.sh`.
  */
 export function telstraDeviceImage(slug: string) {
-  return `/images/telstra/devices/${slug}.png`;
+  return assetPath(`/images/telstra/devices/${slug}.png`);
 }
 
 export const DEVICES: DeviceSpec[] = [

@@ -8,6 +8,11 @@ const nextConfig = {
   images: { unoptimized: true },
   // index.html per folder — works reliably on GitHub Pages
   trailingSlash: true,
+  // Exposed to client bundles so <img> tags can prefix /images/... paths.
+  // (Next only auto-prefixes <Image> and <Link>, not plain <img>.)
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
+  },
   ...(basePath
     ? {
         basePath,

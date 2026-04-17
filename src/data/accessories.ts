@@ -1,3 +1,5 @@
+import { assetPath } from "@/lib/utils";
+
 export interface AccessorySpec {
   slug: string;
   name: string;
@@ -8,7 +10,7 @@ export interface AccessorySpec {
 
 /** From `public/images/telstra/accessories/` — see `scripts/download-telstra-images.sh`. */
 export function telstraAccessoryImage(slug: string) {
-  return `/images/telstra/accessories/${slug}.png`;
+  return assetPath(`/images/telstra/accessories/${slug}.png`);
 }
 
 export const ACCESSORIES: AccessorySpec[] = [
