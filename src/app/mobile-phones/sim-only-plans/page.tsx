@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PLAN_TIERS } from "@/data/devices";
+import { formatPrice } from "@/lib/utils";
 
 export default function SimOnlyPlansPage() {
   return (
@@ -15,7 +16,7 @@ export default function SimOnlyPlansPage() {
             className="rounded-2xl border bg-white p-6 shadow-sm"
           >
             <h2 className="font-bold">{p.name}</h2>
-            <p className="text-2xl text-telstra-blue">${p.pricePerMonth}/mth</p>
+            <p className="text-2xl text-telstra-blue">${formatPrice(p.pricePerMonth)}/mth</p>
             <p className="text-sm text-gray-600">{p.dataGB}GB</p>
             <Link
               href="/shop/cart"

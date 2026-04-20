@@ -12,7 +12,7 @@ import { useDemoStore } from "@/store/useDemoStore";
 import { track } from "@/lib/track";
 import { getEffectiveVariant } from "@/lib/amplitude";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 
 export function DeviceDetail({ device }: { device: DeviceSpec }) {
   const router = useRouter();
@@ -234,7 +234,7 @@ export function DeviceDetail({ device }: { device: DeviceSpec }) {
                       )}
                       <p className="font-bold">{p.name}</p>
                       <p className="text-lg text-telstra-blue">
-                        ${p.pricePerMonth}/mth
+                        ${formatPrice(p.pricePerMonth)}/mth
                       </p>
                       <p className="text-sm text-gray-600">{p.dataGB}GB data</p>
                       <p className="mt-1 text-xs text-gray-500">
@@ -274,12 +274,12 @@ export function DeviceDetail({ device }: { device: DeviceSpec }) {
               <div className="mt-6 rounded-xl bg-telstra-grey p-4">
                 <p className="text-sm text-gray-600">Monthly total</p>
                 <p className="text-2xl font-bold text-telstra-dark">
-                  ${totalMonthly.toFixed(2)}/mth
+                  ${formatPrice(totalMonthly)}/mth
                 </p>
                 <p className="text-xs text-gray-500">
-                  Device ${deviceMonthly.toFixed(2)} + Plan $
-                  {plan.pricePerMonth}
-                  {addOnMonthly > 0 && ` + Add-ons $${addOnMonthly.toFixed(2)}`}
+                  Device ${formatPrice(deviceMonthly)} + Plan $
+                  {formatPrice(plan.pricePerMonth)}
+                  {addOnMonthly > 0 && ` + Add-ons $${formatPrice(addOnMonthly)}`}
                 </p>
               </div>
 
@@ -295,7 +295,7 @@ export function DeviceDetail({ device }: { device: DeviceSpec }) {
                       {a.pricePerMonth > 0 && (
                         <span className="text-gray-500">
                           {" "}
-                          +${a.pricePerMonth}/mth
+                          +${formatPrice(a.pricePerMonth)}/mth
                         </span>
                       )}
                     </span>

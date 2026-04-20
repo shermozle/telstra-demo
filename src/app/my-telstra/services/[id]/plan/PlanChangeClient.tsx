@@ -8,7 +8,7 @@ import { PLAN_TIERS } from "@/data/devices";
 import { useDemoStore as useDemo } from "@/store/useDemoStore";
 import { track } from "@/lib/track";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 
 export function PlanChangeClient({ id }: { id: string }) {
   const services = useDemo((s) => s.services);
@@ -83,7 +83,7 @@ export function PlanChangeClient({ id }: { id: string }) {
                 </span>
               )}
               <p className="font-bold">{t.name}</p>
-              <p className="text-telstra-blue">${t.pricePerMonth}/mth</p>
+              <p className="text-telstra-blue">${formatPrice(t.pricePerMonth)}/mth</p>
               <p className="text-sm text-gray-600">{t.dataGB}GB</p>
             </button>
           );

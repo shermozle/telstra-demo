@@ -16,3 +16,11 @@ export function assetPath(path: string): string {
   if (!path.startsWith("/")) return path;
   return `${BASE_PATH}${path}`;
 }
+
+/**
+ * Format a monetary amount for display, always rounded to 2 decimal places.
+ * Avoids JS float artifacts like `52.04 + 68 = 120.03999999999999`.
+ */
+export function formatPrice(amount: number): string {
+  return (Math.round(amount * 100) / 100).toFixed(2);
+}

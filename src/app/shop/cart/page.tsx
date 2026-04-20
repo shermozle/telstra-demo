@@ -12,6 +12,7 @@ import {
 import { telstraDeviceImage } from "@/data/devices";
 import { TELSTRA_MARKETING } from "@/lib/telstra-assets";
 import { getEffectiveVariant } from "@/lib/amplitude";
+import { formatPrice } from "@/lib/utils";
 
 const PROMOS: Record<string, number> = {
   ONLINE50: 50,
@@ -117,7 +118,13 @@ export default function CartPage() {
                     </p>
                   )}
                   <p className="text-telstra-blue">
-                    ${(item.device?.pricePerMonth ?? 0) + (item.plan?.pricePerMonth ?? 0) + item.addOns.reduce((a, x) => a + x.pricePerMonth, 0)}/mth
+                    $
+                    {formatPrice(
+                      (item.device?.pricePerMonth ?? 0) +
+                        (item.plan?.pricePerMonth ?? 0) +
+                        item.addOns.reduce((a, x) => a + x.pricePerMonth, 0)
+                    )}
+                    /mth
                   </p>
                   <button
                     type="button"
