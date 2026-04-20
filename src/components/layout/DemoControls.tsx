@@ -6,7 +6,11 @@ import { Settings, X } from "lucide-react";
 import { useDemoStore } from "@/store/useDemoStore";
 import { useDemoControlsStore } from "@/store/useDemoControlsStore";
 import { useDemoKeyboardShortcuts } from "@/hooks/useDemoKeyboardShortcuts";
-import { initAmplitudeFromControls, getEffectiveVariant } from "@/lib/amplitude";
+import {
+  DEFAULT_AMPLITUDE_API_KEY,
+  getEffectiveVariant,
+  initAmplitudeFromControls,
+} from "@/lib/amplitude";
 import { Button } from "@/components/ui/button";
 
 const FLAG_KEYS = [
@@ -109,13 +113,18 @@ export function DemoControls() {
 
               <section className="mb-4 space-y-2">
                 <h3 className="font-semibold text-telstra-dark">Amplitude</h3>
-                <label className="block text-xs text-gray-600">API key</label>
+                <label className="block text-xs text-gray-600">
+                  API key
+                </label>
                 <input
-                  className="w-full rounded border px-2 py-1 text-xs"
+                  className="w-full rounded border px-2 py-1 font-mono text-xs"
                   value={amplitudeApiKey}
                   onChange={(e) => setAmplitudeApiKey(e.target.value)}
-                  placeholder="Amplitude API key"
+                  placeholder={`${DEFAULT_AMPLITUDE_API_KEY} (default)`}
                 />
+                <p className="text-[10px] text-gray-500">
+                  Leave blank to log events to the default demo project.
+                </p>
                 <label className="block text-xs text-gray-600">
                   Experiment deployment key
                 </label>

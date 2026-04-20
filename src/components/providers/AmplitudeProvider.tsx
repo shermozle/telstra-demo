@@ -40,7 +40,7 @@ export function AmplitudeProvider({ children }: { children: React.ReactNode }) {
   ]);
 
   useEffect(() => {
-    if (!amplitudeApiKey || !user.isLoggedIn) {
+    if (!user.isLoggedIn) {
       identified.current = null;
       return;
     }

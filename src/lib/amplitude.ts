@@ -8,6 +8,19 @@ import {
 } from "@amplitude/experiment-js-client";
 import { useDemoControlsStore } from "@/store/useDemoControlsStore";
 
+/**
+ * Default Amplitude project used when the demo operator hasn't set their own
+ * API key via the demo controls panel. Events from unconfigured visitors land
+ * in this project so we always have a live stream to show.
+ */
+export const DEFAULT_AMPLITUDE_API_KEY = "415ba76a7503fbbf7591ab341bd979d9";
+
+/** Override from the controls panel, falling back to the default project. */
+export function getEffectiveAmplitudeApiKey(): string {
+  const override = useDemoControlsStore.getState().amplitudeApiKey.trim();
+  return override || DEFAULT_AMPLITUDE_API_KEY;
+}
+
 let experimentClient: ExperimentClient | null = null;
 let initGeneration = 0;
 let lastInitFingerprint = "";
@@ -21,20 +34,15 @@ export function initAmplitudeFromControls(): void {
 
   const gen = ++initGeneration;
   const {
-    amplitudeApiKey,
     experimentDeploymentKey,
     sessionReplayEnabled,
     guidesEnabled,
   } = useDemoControlsStore.getState();
+  const apiKey = getEffectiveAmplitudeApiKey();
 
   experimentClient = null;
 
-  if (!amplitudeApiKey) {
-    lastInitFingerprint = "";
-    return;
-  }
-
-  const fingerprint = `${amplitudeApiKey}|${experimentDeploymentKey}|${sessionReplayEnabled}|${guidesEnabled}`;
+  const fingerprint = `${apiKey}|${experimentDeploymentKey}|${sessionReplayEnabled}|${guidesEnabled}`;
   if (fingerprint === lastInitFingerprint) {
     return;
   }
@@ -48,7 +56,7 @@ export function initAmplitudeFromControls(): void {
     fileDownloads: true,
   };
 
-  amplitude.init(amplitudeApiKey, {
+  amplitude.init(apiKey, {
     autocapture,
     optOut: !guidesEnabled,
   });
