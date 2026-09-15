@@ -85,7 +85,19 @@ generates single-value strings, so it is not in the taxonomy.
 ## Regenerating
 
 `gen_turbodemo.py` built these from the AmpliForce template sheet
-(`1PgGgC9EZ9LNcddIjAGCPxkOmCcXbetwrUallj7j2PHI`), copying columns A, C, E, G, I,
-K, M, O, Q, S and U verbatim and filling only the New columns. Neither file ends
-in a newline: a trailing blank line makes TurboDemo read a phantom row 53 and
-fail with "Old Event Property Name is not defined."
+(`1PgGgC9EZ9LNcddIjAGCPxkOmCcXbetwrUallj7j2PHI`), copying columns A, C, I, K, M,
+O, Q, S and U verbatim and filling only the New columns.
+
+Two things the template does that TurboDemo rejects on import, both handled by
+the generator:
+
+**Inherited old values.** The sheet fills columns E and G only on a property's
+first occurrence and leaves them blank afterwards, since `Product Line` on
+Create Account and on View Campaign are the same property. Import that as CSV
+and TurboDemo fails with "Old Event Property Values is not defined. Row: 10,
+Event Name: View Campaign". The generator forward-fills every occurrence from
+the first. 26 rows need it, including Lead Form Completed's `campaign_name`.
+
+**Trailing newline.** Neither file ends in one. A trailing blank line makes
+TurboDemo read a phantom row 53 and fail with "Old Event Property Name is not
+defined."
