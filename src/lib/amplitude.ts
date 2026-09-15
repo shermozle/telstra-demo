@@ -13,7 +13,7 @@ import { useDemoControlsStore } from "@/store/useDemoControlsStore";
  * API key via the demo controls panel. Events from unconfigured visitors land
  * in this project so we always have a live stream to show.
  */
-export const DEFAULT_AMPLITUDE_API_KEY = "415ba76a7503fbbf7591ab341bd979d9";
+export const DEFAULT_AMPLITUDE_API_KEY = "7453580b0e27875713bdddd50fc2da46";
 
 /** Override from the controls panel, falling back to the default project. */
 export function getEffectiveAmplitudeApiKey(): string {
