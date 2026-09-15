@@ -4,6 +4,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useDemoStore } from "@/store/useDemoStore";
 import { track } from "@/lib/track";
+import { cartToProducts, cartTotals, lineMonthly } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import {
   ACCESSORIES,
@@ -24,12 +25,7 @@ export default function CartPage() {
   const setCart = useDemoStore((s) => s.setCart);
   const removeCartItem = useDemoStore((s) => s.removeCartItem);
   const user = useDemoStore((s) => s.user);
-  const monthly = cart.items.reduce((sum, i) => {
-    const dev = i.device?.pricePerMonth ?? 0;
-    const pl = i.plan?.pricePerMonth ?? 0;
-    const add = i.addOns.reduce((a, x) => a + x.pricePerMonth, 0);
-    return sum + dev + pl + add;
-  }, 0);
+  const { monthly, upfront } = cartTotals(cart);
 
   const promoOff = cart.promoDiscount ?? 0;
   const pointsValue = cart.usePoints ? Math.min(50, user.telstraPlusPoints / 200) : 0;
@@ -118,13 +114,9 @@ export default function CartPage() {
                     </p>
                   )}
                   <p className="text-telstra-blue">
-                    $
-                    {formatPrice(
-                      (item.device?.pricePerMonth ?? 0) +
-                        (item.plan?.pricePerMonth ?? 0) +
-                        item.addOns.reduce((a, x) => a + x.pricePerMonth, 0)
-                    )}
-                    /mth
+                    {item.upfrontToday
+                      ? `$${formatPrice(item.upfrontToday)} upfront`
+                      : `$${formatPrice(lineMonthly(item))}/mth`}
                   </p>
                   <button
                     type="button"
@@ -231,7 +223,7 @@ export default function CartPage() {
               </div>
               <div className="flex justify-between text-gray-600">
                 <dt>Total due today</dt>
-                <dd>$0.00</dd>
+                <dd>${formatPrice(upfront)}</dd>
               </div>
               <div className="flex justify-between text-gray-600">
                 <dt>Due after cooling-off</dt>
@@ -248,11 +240,12 @@ export default function CartPage() {
                   track("Cart Viewed", {
                     cart_items_count: cart.items.length,
                     cart_monthly_value: monthly,
-                    cart_upfront_value: 0,
+                    cart_upfront_value: upfront,
                   });
                   track("Checkout Started", {
                     cart_items_count: cart.items.length,
                     cart_value: monthly,
+                    Products: cartToProducts(cart),
                   });
                 }}
               >

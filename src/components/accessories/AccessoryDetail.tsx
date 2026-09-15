@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import type { AccessorySpec } from "@/data/accessories";
 import { useDemoStore } from "@/store/useDemoStore";
 import { track } from "@/lib/track";
+import { accessoryLineItem } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 
 export function AccessoryDetail({ accessory }: { accessory: AccessorySpec }) {
@@ -25,6 +26,7 @@ export function AccessoryDetail({ accessory }: { accessory: AccessorySpec }) {
       plan_name: "n/a",
       monthly_total: 0,
       cart_value: accessory.price,
+      Products: [accessoryLineItem(accessory.slug)],
     });
     toast.success("Added to cart");
     router.push("/shop/cart");
