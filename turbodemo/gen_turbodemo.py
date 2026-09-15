@@ -140,13 +140,29 @@ GROUP_PROPS = {
     17: ("Likelihood To Activate", "10%; 25%; 50%; 75%; 100%", "0.06; 0.14; 0.2; 0.51; 0.09"),
 }
 
+# The template leaves columns E and G blank on the second and later occurrence
+# of a property name, inheriting from the first. TurboDemo does not honour that
+# through a CSV import and rejects the file with "Old Event Property Values is
+# not defined", so make every occurrence explicit.
+first_seen = {}
+for r in tmpl:
+    name, vals, dist = r[2], r[4].strip(), r[6].strip()
+    if name != "N/A" and vals and dist and name not in first_seen:
+        first_seen[name] = (vals, dist)
+
 out = [header]
 for i, r in enumerate(tmpl, 1):
     row = list(r)
+    if row[2] != "N/A" and (not row[4].strip() or not row[6].strip()):
+        row[4], row[6] = first_seen[row[2]]
     old_event = row[0]
     row[1] = EVENTS[old_event]
     new_prop, new_vals, new_dist = PROPS[i]
     row[3], row[5], row[7] = new_prop, new_vals, new_dist
+    # The two events with no properties need N/A across C-H, not blanks.
+    if old_event in ("View Home Page", "Contact Sales"):
+        for c in range(2, 8):
+            row[c] = "N/A"
     if i in USER_PROPS:
         row[9], row[11], row[13] = USER_PROPS[i]
     if i in GROUP_PROPS:
