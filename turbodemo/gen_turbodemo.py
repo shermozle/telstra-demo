@@ -171,16 +171,26 @@ for i, r in enumerate(tmpl, 1):
     out.append(row)
 
 os.makedirs(OUT, exist_ok=True)
-path = os.path.join(OUT, "telstra-demo-taxonomy.csv")
-with open(path, "w", newline="") as f:
-    csv.writer(f).writerows(out)
-# TurboDemo reads a phantom row from a trailing blank line.
-with open(path, "rb+") as f:
-    f.seek(-2, 2)
-    tail = f.read()
-    if tail.endswith(b"\r\n"):
+
+
+def write(path, rows):
+    with open(path, "w", newline="") as f:
+        csv.writer(f).writerows(rows)
+    # TurboDemo reads a phantom row from a trailing blank line.
+    with open(path, "rb+") as f:
         f.seek(-2, 2)
-        f.truncate()
+        if f.read().endswith(b"\r\n"):
+            f.seek(-2, 2)
+            f.truncate()
+
+
+# Daily Ad Metric is a daily ad-platform aggregate, not something a person does,
+# and TurboDemo attaches it to user profiles like any other event. The site has
+# no equivalent. Drop it from the primary file; keep a full version as a
+# fallback in case TurboDemo insists on the complete template event list.
+path = os.path.join(OUT, "telstra-demo-taxonomy.csv")
+write(path, [r for r in out if r[0] != "Daily Ad Metric"])
+write(os.path.join(OUT, "telstra-demo-taxonomy-with-ad-metrics.csv"), out)
 
 patterns = [
     ["Events with higher dropoff and a conversion driver", "Conversion Rate", "Conversion Driver", "Correlation"],

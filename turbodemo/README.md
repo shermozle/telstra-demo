@@ -1,9 +1,10 @@
 # TurboDemo dataset for the Telstra demo site
 
-Two files for [TurboDemo](https://analytics.amplitude.com/admin-v2/turbodemo):
+Files for [TurboDemo](https://analytics.amplitude.com/admin-v2/turbodemo):
 
-- `telstra-demo-taxonomy.csv` — 52 lines, the header plus the template's 51 property rows
+- `telstra-demo-taxonomy.csv` — 46 lines, the header plus 45 property rows
 - `telstra-demo-data-patterns.csv` — 7 lines, the header plus 6 conversion drivers
+- `telstra-demo-taxonomy-with-ad-metrics.csv` — fallback, see below
 
 They rename the AmpliForce golden-dataset template so its synthetic history uses
 the same event and property names this site sends live. 19 of the 20 renameable
@@ -50,8 +51,24 @@ Template slot order drives the funnel drop-off, so the order below is fixed.
 | Receive Account Alert | Bill Viewed | |
 | View Account Alert | Usage Checked | |
 | Page View | Page View (kept) | |
-| Daily Ad Metric | Daily Ad Metrics (kept) | |
 | Lead Form Completed | Lead Form Completed (kept) | |
+
+## Daily Ad Metric is dropped
+
+The template's `Daily Ad Metric` slot is a daily ad-platform aggregate
+(impressions, clicks, cost by ad group). TurboDemo generates it like any other
+event, attached to user profiles, which is not how ad metrics reach Amplitude in
+a real implementation and not a pattern worth showing a customer. The site sends
+no equivalent either, so it would be synthetic-only noise in the tracking plan.
+
+The primary taxonomy file leaves its six rows out, giving 45 property rows and
+22 events.
+
+If TurboDemo rejects that, it wants the complete template event list. Import
+`telstra-demo-taxonomy-with-ad-metrics.csv` instead, then hide or block
+`Daily Ad Metrics` in the project's tracking plan so it stays out of charts.
+
+## Products array
 
 TurboDemo attaches its `Products` array to slots 4, 5 and 8 only, and that is
 hardcoded. The site also sends the array on `Checkout Step Completed`, which has
@@ -98,6 +115,6 @@ and TurboDemo fails with "Old Event Property Values is not defined. Row: 10,
 Event Name: View Campaign". The generator forward-fills every occurrence from
 the first. 26 rows need it, including Lead Form Completed's `campaign_name`.
 
-**Trailing newline.** Neither file ends in one. A trailing blank line makes
+**Trailing newline.** No file ends in one. A trailing blank line makes
 TurboDemo read a phantom row 53 and fail with "Old Event Property Name is not
 defined."
