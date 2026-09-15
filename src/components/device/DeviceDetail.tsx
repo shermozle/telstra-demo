@@ -10,6 +10,7 @@ import type { DeviceSpec } from "@/data/devices";
 import { PLAN_TIERS, ADD_ONS } from "@/data/devices";
 import { useDemoStore } from "@/store/useDemoStore";
 import { track } from "@/lib/track";
+import { deviceLineItem } from "@/lib/products";
 import { getEffectiveVariant } from "@/lib/amplitude";
 import { Button } from "@/components/ui/button";
 import { cn, formatPrice } from "@/lib/utils";
@@ -100,6 +101,7 @@ export function DeviceDetail({ device }: { device: DeviceSpec }) {
       plan_name: plan.name,
       monthly_total: totalMonthly,
       cart_value: totalMonthly,
+      Products: [deviceLineItem(device.slug, totalMonthly)],
     });
     toast.success("Added to cart");
     router.push("/shop/cart");

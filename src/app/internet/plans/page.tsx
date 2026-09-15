@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useDemoStore } from "@/store/useDemoStore";
 import { NBN_PLANS } from "@/data/internet";
 import { track } from "@/lib/track";
+import { internetLineItem } from "@/lib/products";
 import { getEffectiveVariant } from "@/lib/amplitude";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -78,6 +79,9 @@ export default function NbnPlansPage() {
                     plan_name: p.name,
                     monthly_total: price,
                     cart_value: price,
+                    Products: [
+                      internetLineItem(p.id, price, "nbn", internetOnly),
+                    ],
                   });
                   toast.success("Added nbn plan to cart");
                 }}

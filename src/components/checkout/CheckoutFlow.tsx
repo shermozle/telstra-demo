@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import type { CheckoutState } from "@/types/demo";
 import { useDemoStore } from "@/store/useDemoStore";
 import { track } from "@/lib/track";
+import { cartToProducts, cartTotals } from "@/lib/products";
 import { getEffectiveVariant } from "@/lib/amplitude";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -43,16 +44,11 @@ export function CheckoutFlow() {
 
   function placeOrder() {
     const orderId = `TL${Math.floor(100000 + Math.random() * 900000)}`;
-    const monthly = cart.items.reduce((sum, i) => {
-      const dev = i.device?.pricePerMonth ?? 0;
-      const pl = i.plan?.pricePerMonth ?? 0;
-      const add = i.addOns.reduce((a, x) => a + x.pricePerMonth, 0);
-      return sum + dev + pl + add;
-    }, 0);
+    const { monthly, upfront } = cartTotals(cart);
     track("Order Placed", {
       order_id: orderId,
       total_monthly: monthly,
-      total_upfront: 0,
+      total_upfront: upfront,
       items_count: cart.items.length,
       promo_code: cart.promoCode ?? "",
       points_used: cart.usePoints ? 5000 : 0,
@@ -60,8 +56,9 @@ export function CheckoutFlow() {
         (s, i) => s + (i.tradeInCredit ?? 0),
         0
       ),
+      Products: cartToProducts(cart),
     });
-    setOrderPlaced(orderId, { monthly, upfront: 0, items: cart.items.length });
+    setOrderPlaced(orderId, { monthly, upfront, items: cart.items.length });
     clearCart();
     resetCheckout();
     toast.success("Order placed");

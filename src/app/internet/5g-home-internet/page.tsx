@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useDemoStore } from "@/store/useDemoStore";
 import { track } from "@/lib/track";
+import { internetLineItem } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -47,6 +48,7 @@ export default function FiveGHomePage() {
               plan_name: "5G Home",
               monthly_total: 85,
               cart_value: 85,
+              Products: [internetLineItem("5g-home", 85, "5G Home")],
             });
             toast.success("Added to cart");
           }}
