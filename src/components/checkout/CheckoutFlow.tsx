@@ -38,7 +38,11 @@ export function CheckoutFlow() {
   const [step, setStep] = useState(1);
 
   function goNext(label: string, num: number) {
-    track("Checkout Step Completed", { step_name: label, step_number: num });
+    track("Checkout Step Completed", {
+      step_name: label,
+      step_number: num,
+      Products: cartToProducts(cart),
+    });
     setStep((s) => Math.min(s + 1, totalSteps));
   }
 
