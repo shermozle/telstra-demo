@@ -10,11 +10,14 @@ import { ACCESSORIES } from "@/data/accessories";
  * amplitude/nova), so synthetic history and live events from this site split
  * into the same child properties under one `Products` parent.
  *
- * Do not rename anything here. In particular:
+ * Do not rename these without checking the TurboDemo side. In particular:
  *   - the parent property is `Products`, capital P
- *   - `dicount_applied` is misspelled in the TurboDemo source, and matching it
- *     is the point; fixing the spelling creates a second, half-empty property
  *   - `item_id` is an integer there, not a slug, so it is an integer here
+ *
+ * One deliberate divergence: TurboDemo's source spells the discount field
+ * `dicount_applied`, and this site spells it `discount_applied`. Arrays from
+ * TurboDemo's generator therefore split into a separate child property for
+ * that one field. The other six line up.
  *
  * A verified TurboDemo line item, for reference:
  *   {"brand":"Ralph Lauren","categories":"Digital Content","department":"Kids",
@@ -24,7 +27,7 @@ export interface ProductLineItem {
   brand: string;
   categories: string;
   department: string;
-  dicount_applied: "Yes" | "No";
+  discount_applied: "Yes" | "No";
   item_id: number;
   price: number;
   quantity: number;
@@ -98,7 +101,7 @@ export function deviceLineItem(
     brand: device?.brand ?? "Telstra",
     categories: "Smartphone",
     department: "Mobile",
-    dicount_applied: discounted ? "Yes" : "No",
+    discount_applied: discounted ? "Yes" : "No",
     item_id: itemId(slug),
     price,
     quantity: 1,
@@ -114,7 +117,7 @@ export function accessoryLineItem(
     brand: accessoryBrand(accessory?.name ?? ""),
     categories: accessory?.category ?? "Accessories",
     department: "Accessories",
-    dicount_applied: discounted ? "Yes" : "No",
+    discount_applied: discounted ? "Yes" : "No",
     item_id: itemId(slug),
     price: accessory?.price ?? 0,
     quantity: 1,
@@ -131,7 +134,7 @@ export function internetLineItem(
     brand: "Telstra",
     categories: kind,
     department: "Internet",
-    dicount_applied: discounted ? "Yes" : "No",
+    discount_applied: discounted ? "Yes" : "No",
     item_id: itemId(planId),
     price,
     quantity: 1,
@@ -176,7 +179,7 @@ export function cartItemToLineItem(
       brand: accessoryBrand(item.title),
       categories: "Accessories",
       department: "Accessories",
-      dicount_applied: discounted ? "Yes" : "No",
+      discount_applied: discounted ? "Yes" : "No",
       item_id: 0,
       price: item.upfrontToday ?? 0,
       quantity: 1,
@@ -195,7 +198,7 @@ export function cartItemToLineItem(
     brand: "Telstra",
     categories: "SIM Only",
     department: "Mobile",
-    dicount_applied: discounted ? "Yes" : "No",
+    discount_applied: discounted ? "Yes" : "No",
     item_id: itemId(item.plan?.name.toLowerCase() ?? ""),
     price: lineMonthly(item),
     quantity: 1,
