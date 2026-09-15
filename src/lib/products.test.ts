@@ -8,25 +8,28 @@ import {
   internetLineItem,
 } from "./products";
 
-/** TurboDemo's hardcoded child properties, in the order the Java source lists them. */
-const TURBODEMO_KEYS = [
+/**
+ * The child properties every line item must carry. Matches TurboDemo's
+ * hardcoded set except for `discount_applied`, which TurboDemo misspells.
+ */
+const LINE_ITEM_KEYS = [
   "brand",
   "categories",
   "department",
-  "dicount_applied",
+  "discount_applied",
   "item_id",
   "price",
   "quantity",
 ];
 
 describe("Products line items", () => {
-  it("emits exactly TurboDemo's child properties", () => {
+  it("emits exactly the expected child properties", () => {
     for (const item of [
       deviceLineItem("iphone-17-pro", 74.16),
       accessoryLineItem("airpods-pro-3"),
       internetLineItem("nbn50", 90, "nbn"),
     ]) {
-      expect(Object.keys(item).sort()).toEqual([...TURBODEMO_KEYS].sort());
+      expect(Object.keys(item).sort()).toEqual([...LINE_ITEM_KEYS].sort());
     }
   });
 
@@ -68,7 +71,7 @@ describe("Products line items", () => {
     };
 
     const [line] = cartToProducts(cart);
-    expect(line.dicount_applied).toBe("Yes");
+    expect(line.discount_applied).toBe("Yes");
     expect(line.item_id).toBe(102);
     expect(line.price).toBeCloseTo(120.04);
   });
